@@ -1,6 +1,7 @@
 import pygame
 from constants import *
 from player import *
+from circleshape import *
 
 def main():
     pygame.init()
@@ -15,8 +16,10 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
+        me.update(dt)
         screen.fill("black")
         me.draw(screen)
+
         pygame.display.flip()
 
         #limits framerate to tick value
