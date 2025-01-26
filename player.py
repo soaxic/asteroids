@@ -8,6 +8,8 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.shot_cooldown = 0
+        self.points = 0
+        self.lives = PLAYER_LIVES
 
     # in the player class
     def triangle(self):
@@ -42,6 +44,7 @@ class Player(CircleShape):
                 self.shoot(dt)
         if keys[pygame.K_ESCAPE]:
             print("Thanks for playing!")
+            print(f"Your score was: {self.points}")
             pygame.quit()
 
 
@@ -53,3 +56,15 @@ class Player(CircleShape):
         shot = Shot(self.position.x, self.position.y)
         shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation)
         self.shot_cooldown = PLAYER_SHOOT_COOLDOWN
+
+    def get_lives(self):
+        return PLAYER_LIFE_INDICATOR * self.lives
+    
+    def life_color(self):
+        if self.lives == 1:
+            return (255, 0, 0)
+        else:
+            return (255, 255, 255)
+        
+    def set_window_title(self):
+        pygame.display.set_caption(f"ASSteroids -- Score: {self.points} -- Lives remaining: {self.lives}")

@@ -8,6 +8,8 @@ from shot import *
 
 def main():
     pygame.init()
+    pygame.font.init()
+    font = pygame.font.Font(None, 36)
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     game_clock = pygame.time.Clock()
     dt = 0
@@ -27,9 +29,12 @@ def main():
 
     Shot.containers = (shots, updatable, drawable)
 
+    player.set_window_title()
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                print(f"Your score was: {player.points}")
                 pygame.quit()
 
         for thing in updatable:
@@ -40,14 +45,28 @@ def main():
                 if asteroid.check_collision(shot):
                     shot.kill()
                     asteroid.split()
+                    player.points += 1
+                    player.set_window_title()
             if asteroid.check_collision(player):
-                print("Game over!")
-                pygame.quit()
+                player.lives -= 1
+                player.set_window_title()
+                if player.lives == 0:
+                    print("Game over!")
+                    print(f"Your score was: {player.points}")
+                    pygame.quit()
+                else:
+                    asteroid.kill()
 
         screen.fill("black")
         
         for thing in drawable:
             thing.draw(screen)
+
+        score_text = font.render(f"Score: {player.points}", True, (255, 255, 255))
+        screen.blit(score_text, (10, 10))
+
+        remaining_lives_text = font.render(f"Lives remaining: {player.get_lives()}", True, player.life_color())
+        screen.blit(remaining_lives_text, (10, 50))
 
         pygame.display.flip()
 
